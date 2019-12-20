@@ -1,5 +1,9 @@
 package arrayandslices
 
-func Sum(arr []int) int {
-	return 0
+func Sum(arr []int) (sum int) {
+	for i := 0; i < len(arr); i++ {
+		sum += arr[i]
+	}
+
+	return
 }
