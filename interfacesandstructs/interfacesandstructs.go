@@ -1,5 +1,7 @@
 package interfacesandstructs
 
+import "math"
+
 type Rectangle struct {
 	Height float64
 	Width  float64
@@ -10,7 +12,7 @@ type Circle struct {
 }
 
 func (c Circle) Area() float64 {
-	return 0.0
+	return math.Pi * c.Radius * c.Radius
 }
 
 func (r Rectangle) Perimeter() float64 {
