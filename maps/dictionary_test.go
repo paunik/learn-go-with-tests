@@ -24,7 +24,8 @@ func TestAdd(t *testing.T) {
 	t.Run("Add one word to dictionary", func(t *testing.T) {
 		word := "first"
 		definition := "add first word"
-		dictionary.Add(word, definition)
+		err := dictionary.Add(word, definition)
+		assertNotError(t, err)
 
 		assertDefinition(t, dictionary, word, definition)
 	})
