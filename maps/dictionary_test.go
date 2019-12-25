@@ -14,26 +14,66 @@ func TestSearch(t *testing.T) {
 	t.Run("unknown word", func(t *testing.T) {
 		_, err := dictionary.Search("unknown")
 
-		assertError(t, err, ErrWordNotFound)
+		assertError(t, err, ErrNotFound)
 	})
 }
 
 func TestAdd(t *testing.T) {
 	dictionary := Dictionary{}
-	dictionary.Add("first", "add first word")
 
 	t.Run("Add one word to dictionary", func(t *testing.T) {
-		want := "add first word"
+		word := "first"
+		definition := "add first word"
+		dictionary.Add(word, definition)
 
-		got, err := dictionary.Search("first")
+		assertDefinition(t, dictionary, word, definition)
+	})
 
-		if err != nil {
-			t.Fatal("should find added word:", err)
-		}
+	t.Run("existing word", func(t *testing.T) {
+		word := "test"
+		definition := "this is just a test"
+		dictionary := Dictionary{word: definition}
+		err := dictionary.Add(word, "new test")
 
-		if want != got {
-			t.Errorf("got %q want %q", got, want)
-		}
+		assertError(t, err, ErrWordExists)
+		assertDefinition(t, dictionary, word, definition)
+	})
+}
+
+func assertDefinition(t *testing.T, dictionary Dictionary, word, definition string) {
+	t.Helper()
+
+	got, err := dictionary.Search(word)
+	if err != nil {
+		t.Fatal("should find added word:", err)
+	}
+
+	if definition != got {
+		t.Errorf("got %q want %q", got, definition)
+	}
+}
+
+func TestUpdate(t *testing.T) {
+	t.Run("existing word", func(t *testing.T) {
+		word := "test"
+		definition := "this is just a test"
+		newDefinition := "new definition"
+		dictionary := Dictionary{word: definition}
+
+		err := dictionary.Update(word, newDefinition)
+
+		assertNotError(t, err)
+		assertDefinition(t, dictionary, word, newDefinition)
+	})
+
+	t.Run("new word", func(t *testing.T) {
+		word := "test"
+		definition := "this is just a test"
+		dictionary := Dictionary{}
+
+		err := dictionary.Update(word, definition)
+
+		assertError(t, err, ErrWordDoesNotExist)
 	})
 }
 
@@ -54,5 +94,13 @@ func assertError(t *testing.T, got, want error) {
 
 	if got != want {
 		t.Errorf("got error %q, wanted error %q", got, want)
+	}
+}
+
+func assertNotError(t *testing.T, got error) {
+	t.Helper()
+
+	if got != nil {
+		t.Fatal("expected to get an error")
 	}
 }
