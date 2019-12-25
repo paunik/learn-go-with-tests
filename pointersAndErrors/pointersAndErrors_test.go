@@ -32,7 +32,7 @@ func TestWallet(t *testing.T) {
 		}
 
 		if got.Error() != want {
-			t.Error("got %q, want %q", got, want)
+			t.Errorf("got %q, want %q", got, want)
 		}
 	}
 
