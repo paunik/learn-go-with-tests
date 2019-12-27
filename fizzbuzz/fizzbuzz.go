@@ -5,10 +5,16 @@ import (
 	"strconv"
 )
 
+const Fizz = "Fizz"
+const Buzz = "Buzz"
+
 var ErrInvalidInput = errors.New("Invalid input")
 
-func FizzBuzz(n int) (string, error) {
+func divisible(numerator, denominator int) bool {
+	return numerator%denominator == 0
+}
 
+func FizzBuzz(n int) (string, error) {
 	var res string
 
 	if n < 0 {
@@ -19,13 +25,16 @@ func FizzBuzz(n int) (string, error) {
 	}
 
 	for i := 1; i <= n; i++ {
+		fizz := divisible(i, 3)
+		buzz := divisible(i, 5)
+
 		switch true {
-		case i%5 == 0 && i%3 == 0:
-			res += "FizzBuzz"
-		case i%3 == 0:
-			res += "Fizz"
-		case i%5 == 0:
-			res += "Buzz"
+		case fizz && buzz:
+			res += Fizz + Buzz
+		case fizz:
+			res += Fizz
+		case buzz:
+			res += Buzz
 		default:
 			res += strconv.Itoa(i)
 		}
