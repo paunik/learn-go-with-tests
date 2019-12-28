@@ -14,7 +14,7 @@ func TestCounter(t *testing.T) {
 		assertCounter(t, counter, 3)
 	})
 
-	t.Run("Increment concurrently safe", func(t *testing.T) {
+	t.Run("it runs safely concurrently", func(t *testing.T) {
 		wantedCount := 1000
 		counter := Counter{}
 
@@ -27,8 +27,9 @@ func TestCounter(t *testing.T) {
 				w.Done()
 			}(&wg)
 		}
-
 		wg.Wait()
+
+		assertCounter(t, counter, wantedCount)
 	})
 }
 
