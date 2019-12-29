@@ -5,15 +5,20 @@ import (
 	"strconv"
 )
 
+// Fizz string
 const Fizz = "Fizz"
+
+// Buzz string
 const Buzz = "Buzz"
 
+// ErrInvalidInput error
 var ErrInvalidInput = errors.New("Invalid input")
 
 func divisible(numerator, denominator int) bool {
 	return numerator%denominator == 0
 }
 
+// FizzBuzz implementation
 func FizzBuzz(n int) (string, error) {
 	var res string
 

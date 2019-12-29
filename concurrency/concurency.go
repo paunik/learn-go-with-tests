@@ -1,5 +1,6 @@
 package concurrency
 
+// WebsiteChecker type signature for website checker
 type WebsiteChecker func(string) bool
 
 type result struct {
@@ -7,6 +8,7 @@ type result struct {
 	bool
 }
 
+// CheckWebsites function checks if site reachable
 func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
 	results := make(map[string]bool)
 	resultChannel := make(chan result)

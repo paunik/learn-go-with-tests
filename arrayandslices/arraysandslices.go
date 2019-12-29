@@ -1,5 +1,6 @@
 package arrayandslices
 
+// Sum sums slice of integers
 func Sum(arr []int) (sum int) {
 	for _, val := range arr {
 		sum += val
@@ -8,6 +9,7 @@ func Sum(arr []int) (sum int) {
 	return
 }
 
+// SumAll sums slice of slices
 func SumAll(numberOfSums ...[]int) []int {
 	sums := make([]int, len(numberOfSums))
 	for i, numbers := range numberOfSums {
@@ -17,6 +19,7 @@ func SumAll(numberOfSums ...[]int) []int {
 	return sums
 }
 
+// SumAllTails sums all tails of slices
 func SumAllTails(numberOfSums ...[]int) []int {
 	sums := make([]int, len(numberOfSums))
 	for i, numbers := range numberOfSums {

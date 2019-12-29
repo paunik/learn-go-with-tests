@@ -2,20 +2,26 @@ package main
 
 import "fmt"
 
+// Dictionary type represents map used for dictionary
 type Dictionary map[string]string
 
 const (
-	ErrNotFound         = DictionaryErr("could not find the word you were looking for")
-	ErrWordExists       = DictionaryErr("cannot add word because it already exists")
+	// ErrNotFound no word found
+	ErrNotFound = DictionaryErr("could not find the word you were looking for")
+	// ErrWordExists word already exists
+	ErrWordExists = DictionaryErr("cannot add word because it already exists")
+	// ErrWordDoesNotExist word cant be updated as there is no word found
 	ErrWordDoesNotExist = DictionaryErr("cannot update word because it does not exist")
 )
 
+// DictionaryErr is error type for dictionary errors
 type DictionaryErr string
 
 func (e DictionaryErr) Error() string {
 	return string(e)
 }
 
+// Search method finds word if there and if not returns ErrNotFound
 func (d Dictionary) Search(word string) (string, error) {
 	definition, ok := d[word]
 
@@ -26,6 +32,7 @@ func (d Dictionary) Search(word string) (string, error) {
 	return definition, nil
 }
 
+// Add method adds word to dictionary or returns error if word already in dictionary
 func (d Dictionary) Add(word, definition string) error {
 	_, err := d.Search(word)
 
@@ -41,6 +48,7 @@ func (d Dictionary) Add(word, definition string) error {
 	return nil
 }
 
+// Update method updated word or returns error if word not found
 func (d Dictionary) Update(word, definition string) error {
 	_, err := d.Search(word)
 
@@ -58,6 +66,7 @@ func (d Dictionary) Update(word, definition string) error {
 	return nil
 }
 
+// Delete method deletes string from dictionary
 func (d Dictionary) Delete(word string) {
 	delete(d, word)
 }
