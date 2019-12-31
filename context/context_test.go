@@ -2,6 +2,7 @@ package context
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -39,6 +40,24 @@ func (s *SpyStore) Fetch(ctx context.Context) (string, error) {
 	}
 }
 
+type SpyResponseWriter struct {
+	written bool
+}
+
+func (s *SpyResponseWriter) Header() http.Header {
+	s.written = true
+	return nil
+}
+
+func (s *SpyResponseWriter) Write([]byte) (int, error) {
+	s.written = true
+	return 0, errors.New("not implemented")
+}
+
+func (s *SpyResponseWriter) WriteHeader(statusCode int) {
+	s.written = true
+}
+
 func TestHandler(t *testing.T) {
 	data := "hello, world"
 	t.Run("happy path returns data from store", func(t *testing.T) {
@@ -54,20 +73,22 @@ func TestHandler(t *testing.T) {
 			t.Errorf(`got "%s", want "%s"`, res.Body.String(), data)
 		}
 	})
-	// t.Run("tells store to cancel work if request is cancelled", func(t *testing.T) {
-	// 	store := &SpyStore{response: data, t: t}
-	// 	svr := Server(store)
+	t.Run("tells store to cancel work if request is cancelled", func(t *testing.T) {
+		store := &SpyStore{response: data, t: t}
+		svr := Server(store)
 
-	// 	req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
-	// 	cancellintCtx, cancel := context.WithCancel(req.Context())
-	// 	time.AfterFunc(5*time.Millisecond, cancel)
-	// 	req = req.WithContext(cancellintCtx)
+		cancellintCtx, cancel := context.WithCancel(req.Context())
+		time.AfterFunc(5*time.Millisecond, cancel)
+		req = req.WithContext(cancellintCtx)
 
-	// 	res := httptest.NewRecorder()
+		res := &SpyResponseWriter{}
 
-	// 	svr.ServeHTTP(res, req)
+		svr.ServeHTTP(res, req)
 
-	// 	store.assertWasCancelled()
-	// })
+		if res.written {
+			t.Error("a response should not have been written")
+		}
+	})
 }
