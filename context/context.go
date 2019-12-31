@@ -7,11 +7,12 @@ import "fmt"
 // Store interface
 type Store interface {
 	Fetch() string
+	Cancel()
 }
 
 // Server provides http.HandlerFunc
 func Server(store Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Print(w, store.Fetch())
+		fmt.Fprint(w, store.Fetch())
 	}
 }
