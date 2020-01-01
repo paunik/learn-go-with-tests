@@ -3,12 +3,12 @@ package romannumerals
 import "strings"
 
 func ConvertToRoman(a int) string {
-	if a == 4 {
-		return "IV"
-	}
-
 	var result strings.Builder
-	for i := 0; i < a; i++ {
+	for i := a; i > 0; i-- {
+		if i == 4 {
+			result.WriteString("IV")
+			break
+		}
 		result.WriteString("I")
 	}
 
